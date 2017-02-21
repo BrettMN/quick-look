@@ -1,0 +1,11 @@
+<ul>
+  <li *ngFor="let task of tasks">
+    <div [ngClass]="{'complete' : task.complete}">
+      <label for="task-title">
+        <input type="checkbox" [(ngModel)]="task.complete" name="task-title" id="task-title" /> {{ task.title }}
+      </label>
+      <p>{{ task.description }}</p>
+    </div>
+  </li>
+</ul>
+
