@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Task } from '../models/task';                  // <= this is new
+// import { Task } from '../models/task';               // <= Remove this                 
+import { TaskService } from '../services/task.service'; // <= This is new
 
 @Component({
   selector: 'app-task-list',
@@ -8,18 +9,21 @@ import { Task } from '../models/task';                  // <= this is new
 })
 export class TaskListComponent implements OnInit {
 
-  tasks: Task[];                                        // <= this is new
+  // tasks: Task[];                                        // <= Remove this
 
-  constructor() { }
+  constructor(private _taskService: TaskService) { }       // <= This Changed
 
   ngOnInit() {
-    this.tasks = [                                      // <= this is new
-      {                                                 // <= this is new
-        "title": "First Item",                          // <= this is new
-        "complete": true,                               // <= this is new
-        "description": "first task to do"               // <= this is new
-      }                                                 // <= this is new
-    ];                                                  // <= this is new
+    // this.tasks = [                                      // <= Remove this
+    //   {                                                 // <= Remove this
+    //     "title": "First Item",                          // <= Remove this
+    //     "complete": true,                               // <= Remove this
+    //     "description": "first task to do"               // <= Remove this
+    //   }                                                 // <= Remove this
+    // ];                                                  // <= Remove this
+
+    this._taskService.init()                               // <= This is new
+      
   }
 
 }

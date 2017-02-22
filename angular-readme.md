@@ -1,6 +1,4 @@
-
- /var/run/cache/wipdeveloper.com
-## Part I
+# Part I - Create the App
 
 Install `angular-cli`
 
@@ -15,7 +13,6 @@ npm uninstall -g angular-cli @angular/cli
 npm cache clean
 npm install -g @angular/cli@latest
 ```
-
 
 ## Create App with Routing
 
@@ -67,18 +64,12 @@ export class AppComponent {
 }
 ```
 
-And as long as you kept the server running when you made the change it should automatically reload the page with the change in the browser when you save after a quick rebuild.  Quick because we don't have anythign yet. 
-
-#### Compile and Reload
-![Compile and Reload](angular-quick-look-00.gif)
-
-=== 
-## Part II
-
+# Part II - Add a Component
 
 Add a Model for task in my model folder
-#### `task.ts`
-```
+
+#### `src/app/models/task.ts`
+```language-javascript
 export class Task{
   title:string;
   complete:boolean;
@@ -88,75 +79,88 @@ export class Task{
 
 create a component to show all the tasks with the cli using the generate command
 
-
+#### Create `TaskListComponent`
 ```
 ng g component task-list
 ```
 
 > docs at https://github.com/angular/angular-cli#generating-components-directives-pipes-and-services
 
-This command generated a new folder named `task-list` with 4 files:
 
-- task-list.component.css
-- task-list.component.html
-- task-list.component.spec.ts
-- task-list.component.ts
+# Part III - Create a Services
 
-##### task-list.component.css 
+## Add a Service
 
-This is the component level css files
-
-> this starts out empty. 
-
-##### task-list.component.html 
-
-This is the component html template.  the html can also be placed in the TypeScript or JavaScript file.
-
+#### Create `TaskService`
 ```
-<p>
-  task-list works!
-</p>
+ng g service ./services/task
 ```
 
-##### task-list.component.spec.ts
+#### `task.service.ts`
+```language-javascript
+import { Injectable } from '@angular/core';
 
-This is the component test class
+@Injectable()
+export class TaskService {
 
+  constructor() { }
+
+}
 ```
+
+#### `task.service.spec.ts`
+```language-javascript
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
 
-import { TaskListComponent } from './task-list.component';
+import { TestBed, async, inject } from '@angular/core/testing';
+import { TaskService } from './task.service';
 
-describe('TaskListComponent', () => {
-  let component: TaskListComponent;
-  let fixture: ComponentFixture<TaskListComponent>;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ TaskListComponent ]
-    })
-    .compileComponents();
-  }));
-
+describe('TaskService', () => {
   beforeEach(() => {
-    fixture = TestBed.createComponent(TaskListComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    TestBed.configureTestingModule({
+      providers: [TaskService]
+    });
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  it('should ...', inject([TaskService], (service: TaskService) => {
+    expect(service).toBeTruthy();
+  }));
 });
 ```
 
-##### task-list.component.ts
+## Share Data
 
+#### Updated `task.service.ts`
+```language-javascript
+import { Injectable } from '@angular/core';
+import { Task } from '../models/task';                  // <= This is new
+
+@Injectable()
+export class TaskService {
+
+  tasks: Task[];                                        // <= This is new
+
+  constructor() { }
+
+  // New Method
+  init() {
+    this.tasks = [
+      {
+        "title": "First Item",
+        "complete": true,
+        "description": "first task to do"
+      }
+    ];
+  }
+
+}
 ```
+
+#### Updated `task-list.component.ts`
+```language-javascript
 import { Component, OnInit } from '@angular/core';
+// import { Task } from '../models/task';               // <= Remove this                 
+import { TaskService } from '../services/task.service'; // <= This is new
 
 @Component({
   selector: 'app-task-list',
@@ -165,10 +169,67 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TaskListComponent implements OnInit {
 
-  constructor() { }
+  // tasks: Task[];                                        // <= Remove this
+
+  constructor(private _taskService: TaskService) { }       // <= This Changed
 
   ngOnInit() {
+    // this.tasks = [                                      // <= Remove this
+    //   {                                                 // <= Remove this
+    //     "title": "First Item",                          // <= Remove this
+    //     "complete": true,                               // <= Remove this
+    //     "description": "first task to do"               // <= Remove this
+    //   }                                                 // <= Remove this
+    // ];                                                  // <= Remove this
+
+    this._taskService.init()                               // <= This is new
+      
   }
 
 }
 ```
+
+#### Updated `task-list.component.html`
+```language-markup
+<ul>
+  <li *ngFor="let task of _taskService.tasks">  <!-- This line changed -->
+    <!-- Nothing else changed -->
+  </li>
+</ul>
+```
+
+## Register Service
+
+#### Updated `app.module.ts`
+```language-javascript
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+import { AppRoutingModule } from './app-routing.module';
+
+import { AppComponent } from './app.component';
+import { TaskListComponent } from './task-list/task-list.component';
+import { TaskService } from './services/task.service';              // <= This is new
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    TaskListComponent
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpModule,
+    AppRoutingModule
+  ],
+  providers: [
+    TaskService                                                        // <= This is new
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+```
+
+
