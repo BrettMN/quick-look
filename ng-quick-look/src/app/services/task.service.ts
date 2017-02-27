@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Task } from '../models/task';                  // <= This is new
+import { Task } from '../models/task';              
 
 @Injectable()
 export class TaskService {
 
-  tasks: Task[];                                        // <= This is new
+  tasks: Task[];                              
 
   constructor() { }
 
-  // New Method
   init() {
     this.tasks = [
       {
@@ -19,18 +18,13 @@ export class TaskService {
     ];
   }
 
-  // New Method
   addTask(newTask: Task) {
 
-
     return new Promise((resolve, reject) => {
-
       console.log('pretend we called a service with our new task here')
       this.tasks.push(newTask);
 
       resolve();
-
     });
   }
-
 }

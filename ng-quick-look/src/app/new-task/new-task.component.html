@@ -1,0 +1,13 @@
+<div>
+  <div>
+    <label for="title">
+      <input [(ngModel)]="newTask.title" name="title" type="text">
+    </label>
+  </div>
+  <div>
+    <label for="description">
+      <textarea [(ngModel)]="newTask.description" name="description"></textarea>
+    </label>
+  </div>
+  <input (click)="addTask()" type="button" value="Add Task">
+</div>
