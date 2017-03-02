@@ -33,9 +33,11 @@ Vue.component('new-task', {
     <input v-on:click="addTask()" type="button" value="Add Task">
   </div>
   `,
-  data: {
-    title: '',
-    description: ''
+  data: () => {
+    return {
+      title: '',
+      description: ''
+    }
   },
   methods: {
     addTask: function () {
