@@ -1,3 +1,21 @@
+Vue.component('task-list', {
+  props: ['tasks'],
+  template: `
+    <ul>
+      <li v-for="task in tasks">
+        <div>
+          <label for="task-title">
+            <input type="checkbox" v-model="task.complete" /> {{ task.title }}
+          </label>
+          <p>
+            {{ task.description }}
+          </p>
+        </div>
+      </div>
+    </li>
+  </ul>
+  `
+})
 
 var app = new Vue({
   el: '#app',
