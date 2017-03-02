@@ -16,6 +16,35 @@ Vue.component('task-list', {
   </ul>
   `
 })
+Vue.component('new-task', {
+  props: ['tasks'],
+  template: `
+    <div>
+    <div>
+      <label for="title">
+        <input v-model="title" name="title" type="text">
+      </label>
+    </div>
+    <div>
+      <label for="description">
+        <textarea v-model="description" name="description"></textarea>
+      </label>
+    </div>
+    <input v-on:click="addTask()" type="button" value="Add Task">
+  </div>
+  `,
+  data: {
+    title: '',
+    description: ''
+  },
+  methods: {
+    addTask: function () {
+      this.tasks.push({'title': this.title, 'description': this.description})
+      this.title = ''
+      this.description = ''
+    }
+  }
+})
 
 var app = new Vue({
   el: '#app',
