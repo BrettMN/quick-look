@@ -9,10 +9,10 @@
 <body>
   <div id="app">
     <h1>{{ message }}</h1>
-    <new-task v-bind:tasks="tasks"></new-task>
-    <task-list v-bind:tasks="tasks"></task-list>
+    <router-view></router-view>
   </div>
   <script src="https://unpkg.com/vue"></script>
+  <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

@@ -1,6 +1,23 @@
-Vue.component('task-list', {
-  props: ['tasks'],
+
+var tasks = [
+  {
+    title: 'test task one',
+    complete: true,
+    description: 'this is a task that is complete'
+  },
+
+  {
+    title: 'test task two',
+    complete: false,
+    description: 'this is a task that is not complete'
+  }
+]
+
+var taskList = Vue.component('task-list', {
+  // props: ['tasks'],
   template: `
+  <div>
+    <router-link to="/newtask">Add New Task</router-link>
     <ul>
       <li v-for="task in tasks">
         <div>
@@ -12,12 +29,16 @@ Vue.component('task-list', {
           </p>
         </div>
       </div>
-    </li>
-  </ul>
-  `
+      </li>
+    </ul>
+  </div>
+  `,
+  data: function () {
+    return {tasks}
+  }
 })
-Vue.component('new-task', {
-  props: ['tasks'],
+var newTask = Vue.component('new-task', {
+  // props: ['tasks'],
   template: `
     <div>
     <div>
@@ -31,12 +52,14 @@ Vue.component('new-task', {
       </label>
     </div>
     <input v-on:click="addTask()" type="button" value="Add Task">
+    <router-link to="/">Cancel</router-link>
   </div>
   `,
   data: () => {
     return {
       title: '',
-      description: ''
+      description: '',
+      tasks: tasks
     }
   },
   methods: {
@@ -44,26 +67,29 @@ Vue.component('new-task', {
       this.tasks.push({'title': this.title, 'description': this.description})
       this.title = ''
       this.description = ''
+      router.push('/')
     }
   }
 })
 
+var routes = [
+  {
+    path: '/',
+    component: taskList
+  },
+  {path: '/newtask', component: newTask}
+]
+
+var router = new VueRouter({routes})
+
 var app = new Vue({
+  router: router,
   el: '#app',
   data: {
-    message: 'Hello WIPDeveloper.com!',
-    tasks: [
-      {
-        title: 'test task one',
-        complete: true,
-        description: 'this is a task that is complete'
-      },
-
-      {
-        title: 'test task two',
-        complete: false,
-        description: 'this is a task that is not complete'
-      }
-    ]
+    message: 'Hello WIPDeveloper.com!'
   }
 })
+
+// var app = new Vue({
+//   router
+// }).$mount('#app')
