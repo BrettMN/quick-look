@@ -1,3 +1,5 @@
+<a routerLink="/newtask">Add New Task</a>
+
 <ul>
   <li *ngFor="let task of _taskService.tasks">
     <div [ngClass]="{'complete' : task.complete}">
