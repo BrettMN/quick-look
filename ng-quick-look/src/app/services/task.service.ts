@@ -1,21 +1,24 @@
 import { Injectable } from '@angular/core';
-import { Task } from '../models/task';              
+import { Task } from '../models/task';
 
 @Injectable()
 export class TaskService {
 
-  tasks: Task[];                              
+  tasks: Task[];
 
   constructor() { }
 
   init() {
-    this.tasks = [
-      {
-        "title": "First Item",
-        "complete": true,
-        "description": "first task to do"
-      }
-    ];
+
+    if (typeof this.tasks === 'undefined') {
+      this.tasks = [
+        {
+          "title": "First Item",
+          "complete": true,
+          "description": "first task to do"
+        }
+      ];
+    }
   }
 
   addTask(newTask: Task) {
